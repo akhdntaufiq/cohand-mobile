@@ -197,3 +197,79 @@ class MyApp extends StatelessWidget {
    ```
 
 </details>
+
+<details>
+  
+   <summary><b>🏡Tugas 8</b></summary>
+   
+   #### 🍄‍🟫  Apa kegunaan `const` di Flutter? Jelaskan apa keuntungan ketika menggunakan `const` pada kode Flutter. Kapan sebaiknya kita menggunakan `const`, dan kapan sebaiknya tidak digunakan?
+   Keyword `const` pada flutter digunakan untuk membuat sebuah object menjadi immutable atau object tersebut tidak akan berubah selama aplikasi berjalam. Penggunaan `const` akan memberitahu bahwa suatu object hanya akan dibuat sekali saat kompilasi dan akan disimpan dalam memori, sehingga memberikan keuntungan dalam hal efisiensi serta pernggunaan sumber daya yang lebih sedikit. Namun, `const` tidak baik digunakan jika object seperti widget ataupun variabel tersebut bersifat dinamis atau nilainya dapat berubah saat aplikasi berjalan.
+   
+   #### 🍄‍🟫  Jelaskan dan bandingkan penggunaan Column dan Row pada Flutter. Berikan contoh implementasi dari masing-masing layout widget ini!
+Pada Flutter, `Column` dan `Row` adalah dua layout widget yang digunakan untuk menyusun elemen dalam arah vertikal dan horizontal.
+1. `Column` : Digunakan untuk menyusun widget secara vertikal, dari atas ke bawah.
+   ex:
+    ```
+    Column(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const SizedBox(height: 16.0),
+            const Padding(
+              padding: EdgeInsets.only(top: 16.0, bottom: 24.0),
+              child: Text(
+                'Welcome to Cohand',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 26.0,
+                  color: Color(0xFF5B5247),
+                ),
+              ),
+            ),
+            Expanded(
+              child: ListView.builder(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                itemCount: items.length,
+                itemBuilder: (BuildContext context, int index) {
+                  return Padding(
+                    padding: const EdgeInsets.only(bottom: 8.0),
+                    child: ItemCard(items[index]),
+                  );
+                },
+              ),
+            ),
+          ],
+        ),
+    ```
+2. `Row` : Digunakan untuk menyusun widget secara horizontal, dari kiri ke kanan
+   ex:
+    ```
+    Row(
+      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Icon(Icons.home),
+        Icon(Icons.search),
+        Icon(Icons.settings),
+      ],
+    ),
+    ```
+    
+#### 🍄‍🟫  Sebutkan apa saja elemen input yang kamu gunakan pada halaman form yang kamu buat pada tugas kali ini. Apakah terdapat elemen input Flutter lain yang tidak kamu gunakan pada tugas ini? Jelaskan!
+   
+   Pada tugas saya kali ini, saya menggunakan dua elemen input, yaitu:
+   - `TextFormField`: Digunakan untuk input teks, seperti nama produk, harga produk, dan deskripsi produk.
+   - `ElevatedButton`: Digunakan sebagai tombol submit untuk menyimpan produk.
+   
+   Namun, masih banyak lagi elemen input yang disediakan oleh fluuter selain yang saya gunakan, antara lain:
+  - `Checkbox`: Untuk membuat pilihan boolean (ya/tidak).
+  - `Radio`: Untuk membuat pilihan tunggal dari beberapa opsi.
+  - `Switch`: Alternatif untuk Checkbox dengan tampilan saklar.
+   
+   #### 🍄‍🟫  Bagaimana cara kamu mengatur tema (theme) dalam aplikasi Flutter agar aplikasi yang dibuat konsisten? Apakah kamu mengimplementasikan tema pada aplikasi yang kamu buat?
+   Untuk mengatur tema dalam aplikasi flutter, saya menggunakan `ThemeData` pada `MaterialApp` untuk mendefinisikan `primaryColor`, `secondaryColor`, dan warna latar belakang `scaffoldBackgroundColor`. Dengan pendefinisian color theme tersebut, elemen-elemen yang terdapat pada aplikasi saya menjadi konsisten.
+   `NOTES`: Saya belum sepenuhnya menggunakan `ThemeData` yang saya definisikan, namun seperti background color sudah saya gunakan.
+   
+   #### 🍄‍🟫  Bagaimana cara kamu menangani navigasi dalam aplikasi dengan banyak halaman pada Flutter?
+   Pada aplikasi saya, saya menggunakan `Navigator` seperti `Navigator.push` untuk menambahkan halaman baru ke dalam stack dan `Navigator.pushReplacement` di saat ingin kembali ke halaman utaman untuk menghindari stack yang berlapis. Dengan berbagai metode ini, saya dapat menangani navigasi dalam aplikasi dengan lebih fleksibel dan efisien, mengelola stack dengan baik, serta memastikan pengguna memiliki pengalaman navigasi yang lancar.
+
+</details>
