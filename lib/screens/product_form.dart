@@ -1,4 +1,8 @@
+import 'package:cohand_mobile/screens/menu.dart';
 import 'package:flutter/material.dart';
+import 'package:pbp_django_auth/pbp_django_auth.dart';
+import 'package:provider/provider.dart';
+import 'dart:convert';
 
 class ProductEntryFormPage extends StatefulWidget {
   const ProductEntryFormPage({super.key});
@@ -15,6 +19,8 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
 
   @override
   Widget build(BuildContext context) {
+    final request = context.watch<CookieRequest>();
+
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -35,7 +41,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const SizedBox(height: 16.0), // Jarak antara AppBar dan Form
+              const SizedBox(height: 16.0),
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: TextFormField(
@@ -124,7 +130,7 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                       borderRadius: BorderRadius.circular(5.0),
                     ),
                   ),
-                  maxLength: 100, 
+                  maxLength: 100,
                   maxLines: 3,
                   onChanged: (String? value) {
                     setState(() {
@@ -151,92 +157,37 @@ class _ProductEntryFormPageState extends State<ProductEntryFormPage> {
                       backgroundColor: WidgetStateProperty.all(
                           Theme.of(context).colorScheme.primary),
                     ),
-                    onPressed: () {
+                    onPressed: () async {
                       if (_formKey.currentState!.validate()) {
-                        showDialog(
-                          context: context,
-                          builder: (context) {
-                            return AlertDialog(
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10),
-                              ),
-                              title: const Column(
-                                children: [
-                                  Icon(
-                                    Icons.check_circle,
-                                    color: Colors.green,
-                                    size: 50,
-                                  ),
-                                  SizedBox(height: 10),
-                                  Text(
-                                    'Product Successfully Saved',
-                                    style: TextStyle(fontWeight: FontWeight.bold),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                ],
-                              ),
-                              content: SingleChildScrollView(
-                                child: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Row(
-                                      children: [
-                                        const SizedBox(width: 8),
-                                        const Text(
-                                          'Name: ',
-                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                        Text(_productName),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const SizedBox(width: 8),
-                                        const Text(
-                                          'Price: ',
-                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                        Text('Rp. $_productPrice'),
-                                      ],
-                                    ),
-                                    const SizedBox(height: 10),
-                                    Row(
-                                      children: [
-                                        const SizedBox(width: 8),
-                                        const Text(
-                                          'Description: ',
-                                          style: TextStyle(fontWeight: FontWeight.bold),
-                                        ),
-                                        Expanded(child: Text(_productDescription)),
-                                      ],
-                                    ),
-                                  ],
+                          final response = await request.postJson(
+                            "http://127.0.0.1:8000/create-flutter/",
+                            jsonEncode(<String, String>{
+                              'product_name': _productName,
+                              'product_price': _productPrice.toString(),
+                              'product_description': _productDescription,
+                            }),
+                          );
+
+                          if (context.mounted) {
+                            if (response['status'] == 'success') {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Produk berhasil disimpan!"),
                                 ),
-                              ),
-                              actions: [
-                                Center(
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Theme.of(context).colorScheme.primary,
-                                      shape: RoundedRectangleBorder(
-                                        borderRadius: BorderRadius.circular(5),
-                                      ),
-                                    ),
-                                    onPressed: () {
-                                      Navigator.pop(context);
-                                      _formKey.currentState!.reset();
-                                    },
-                                    child: const Text(
-                                      'OK',
-                                      style: TextStyle(color: Colors.white),
-                                    ),
-                                  ),
+                              );
+
+                              Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(builder: (context) => MyHomePage()),
+                              );
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                const SnackBar(
+                                  content: Text("Terdapat kesalahan, silakan coba lagi."),
                                 ),
-                              ],
-                            );
-                          },
-                        );
+                              );
+                            }
+                          }
                       }
                     },
                     child: const Text(
