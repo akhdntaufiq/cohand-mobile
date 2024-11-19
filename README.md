@@ -273,3 +273,86 @@ Pada Flutter, `Column` dan `Row` adalah dua layout widget yang digunakan untuk m
    Pada aplikasi saya, saya menggunakan `Navigator` seperti `Navigator.push` untuk menambahkan halaman baru ke dalam stack dan `Navigator.pushReplacement` di saat ingin kembali ke halaman utaman untuk menghindari stack yang berlapis. Dengan berbagai metode ini, saya dapat menangani navigasi dalam aplikasi dengan lebih fleksibel dan efisien, mengelola stack dengan baik, serta memastikan pengguna memiliki pengalaman navigasi yang lancar.
 
 </details>
+
+<details>
+  <summary><b>🏡Tugas 9</b></summary>
+
+  #### 🍄‍🟫Jelaskan mengapa kita perlu membuat model untuk melakukan pengambilan ataupun pengiriman data JSON? Apakah akan terjadi error jika kita tidak membuat model terlebih dahulu?
+  - Model diperlukan untuk mengelola data JSON agar lebih terstruktur dan mudah digunakan. Ketika data JSON diterima dari server, model dapat mengonversinya menjadi objek yang bisa dikelola langsung di Flutter. Hal ini mempermudah pengolahan data seperti menampilkan data di UI atau memprosesnya untuk kebutuhan logika bisnis. 
+  
+  - Jika kita tidak membuat model, data akan tetap berupa `Map<String, dynamic>` atau raw JSON, yang sulit dikelola dan lebih rawan error. Misalnya, jika terjadi perubahan pada struktur JSON dari server, tanpa model, akan sulit menyesuaikan data karena harus dilakukan secara manual di banyak tempat dalam kode. Dengan model, perubahan hanya dilakukan pada satu tempat saja.
+
+  #### 🍄‍🟫Jelaskan fungsi dari library `http` yang sudah kamu implementasikan pada tugas ini
+  Library `http` berfungsi sebagai alat untuk melakukan komunikasi antara aplikasi Flutter dengan API atau web service. Dengan `http`, kita dapat mengirim permintaan HTTP.
+
+  #### 🍄‍🟫Jelaskan fungsi dari `CookieRequest` dan jelaskan mengapa instance `CookieRequest` perlu untuk dibagikan ke semua komponen di aplikasi Flutter.
+  `CookieRequest` adalah kelas yang digunakan untuk menyimpan sesi autentikasi pengguna, termasuk cookie yang diperlukan untuk mengakses data atau fitur tertentu pada server. Fungsinya adalah sebagai berikut:
+  - **Menyimpan sesi login**: Cookie memastikan bahwa pengguna tetap masuk meskipun berpindah halaman.
+  - **Mengelola autentikasi**: Dengan menyertakan cookie, server dapat memverifikasi permintaan dari pengguna.
+  - **Menyederhanakan HTTP request**: `CookieRequest` secara otomatis menyertakan cookie di setiap request yang dilakukan.
+
+  Instance perlu dibagikan ke semua komponen dikarenakan instance `CookieRequest` memuat sesi autentikasi pengguna, maka semua komponen aplikasi membutuhkan akses ke instance yang sama. Hal ini memastikan:
+  - Sesi tetap konsisten di seluruh aplikasi.
+  - Tidak perlu membuat ulang login setiap kali pengguna berpindah halaman.
+  - Data yang membutuhkan autentikasi dapat diakses tanpa kesalahan.
+
+  #### 🍄‍🟫Jelaskan mekanisme pengiriman data mulai dari input hingga dapat ditampilkan pada Flutter.
+  1. **Pengguna Memasukkan Data**:
+   Data diinput oleh pengguna melalui widget Flutter, seperti `TextField`, pada halaman form.
+
+  2. **Data Dikirim ke Server**:
+   Flutter menggunakan `http` atau `CookieRequest` untuk mengirim data melalui HTTP request (misalnya, `POST`). Data dikonversi ke format JSON sebelum dikirim.
+
+3. **Server Memproses Data**:
+   Django menerima data dari request, memvalidasi data, menyimpan data ke database, dan mengirim respons kembali ke Flutter.
+
+4. **Flutter Menerima Respons**:
+   Respons dari server, yang biasanya berupa JSON, diterima oleh Flutter. Data ini kemudian dikonversi menjadi model menggunakan metode `fromJson`.
+
+5. **Data Ditampilkan di UI**:
+   Flutter menggunakan widget seperti `FutureBuilder` untuk menampilkan data yang telah diproses di UI.
+   
+  #### 🍄‍🟫Jelaskan mekanisme autentikasi dari login, register, hingga logout. Mulai dari input data akun pada Flutter ke Django hingga selesainya proses autentikasi oleh Django dan tampilnya menu pada Flutter.
+
+  1. Pengguna memasukkan username dan password di Flutter.
+  2. Flutter mengirim permintaan POST ke endpoint `/auth/login/` Django.
+  3. Django memverifikasi kredensial:
+    - Jika valid, Django membuat sesi login dan mengembalikan cookie ke Flutter.
+    - Jika tidak valid, Django mengembalikan pesan kesalahan.
+  4. Flutter menyimpan cookie dalam `CookieRequest` dan mengarahkan pengguna ke halaman utama.
+
+  #### **Register**
+  1. Pengguna memasukkan data pendaftaran (username, password) di Flutter.
+  2. Flutter mengirim permintaan POST ke endpoint `/auth/register/`.
+  3. Django memvalidasi data:
+    - Jika valid, Django membuat akun pengguna baru.
+    - Jika tidak valid (misalnya, username sudah digunakan), Django mengembalikan pesan kesalahan.
+  4. Flutter menampilkan status registrasi kepada pengguna.
+
+  #### **Logout**
+  1. Flutter mengirim permintaan POST ke endpoint `/auth/logout/`.
+  2. Django menghapus sesi autentikasi.
+  3. Flutter menghapus cookie di `CookieRequest` dan mengarahkan pengguna kembali ke halaman login.
+  
+  #### 🍄‍🟫Jelaskan bagaimana cara kamu mengimplementasikan checklist di atas secara step-by-step! (bukan hanya sekadar mengikuti tutorial).
+  1. **Membuat Model di Flutter**:
+   - Membuat model dengan fungsi `fromJson` dan `toJson` untuk konversi data JSON.
+   - Menggunakan Quicktype untuk mempercepat pembuatan model.
+
+  2. **Setup Django API**:
+  - Membuat endpoint untuk login, register, dan logout di Django.
+  - Menambahkan middleware CSRF untuk pengamanan.
+  - Mengaktifkan `django-cors-headers` untuk integrasi lintas domain.
+
+  3. **Menambahkan Dependensi di Flutter**:
+   - Menambahkan library `http`, `provider`, dan `pbp_django_auth` untuk autentikasi dan pengelolaan sesi.
+
+  4. **Menghubungkan API ke Flutter**:
+   - Mengimplementasikan login, register, dan logout menggunakan `CookieRequest`.
+   - Membuat halaman untuk masing-masing fitur autentikasi.
+
+  5. **Membangun UI di Flutter**:
+   - Membuat halaman login dan register dengan `TextField` untuk input data.
+   - Menambahkan `FutureBuilder` untuk menampilkan data yang diambil dari server.
+
+</details>
